@@ -1,20 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { PersonaService } from '../services/personaService'
-import { 
-  Users, 
-  Shield, 
-  Plus, 
-  Trash2, 
-  Edit, 
-  Eye, 
-  EyeOff, 
-  AlertCircle, 
-  CheckCircle,
-  Key,
-  UserPlus,
-  Settings
-} from 'lucide-react'
+import { Users, Shield, Plus, Trash2, CreditCard as Edit, Eye, EyeOff, AlertCircle, CheckCircle, Key, UserPlus, Settings } from 'lucide-react'
 
 interface StaffAccount {
   name: string
