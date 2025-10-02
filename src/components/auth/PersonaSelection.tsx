@@ -57,6 +57,8 @@ const PersonaSelection: React.FC = () => {
 
   // If user already has a persona, show switch option
   if (persona) {
+    const displayName = persona.type === 'admin' ? 'Admin' : (persona.personName || persona.loginName || 'Staff')
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
@@ -70,13 +72,13 @@ const PersonaSelection: React.FC = () => {
             </div>
             <h2 className="text-3xl font-bold text-gray-900">Welcome Back</h2>
             <p className="mt-2 text-sm text-gray-600">
-              You're signed in as <span className="font-medium capitalize">{persona.type}</span>
+              You're signed in as <span className="font-medium">{displayName}</span>
             </p>
-            {persona.loginName && (
+            {persona.type === 'staff' && persona.loginName && (
               <p className="text-xs text-gray-500">Login: {persona.loginName}</p>
             )}
           </div>
-          
+
           <div className="bg-white py-8 px-6 shadow-lg rounded-xl border border-gray-100">
             <div className="space-y-4">
               <button

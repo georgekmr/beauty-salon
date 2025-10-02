@@ -3,6 +3,10 @@ import { supabase } from '../lib/supabase'
 export interface PersonaValidationResult {
   success: boolean
   message: string
+  data?: {
+    user_type?: string
+    person_name?: string
+  }
 }
 
 export class PersonaService {
@@ -54,7 +58,8 @@ export class PersonaService {
       const result = data?.[0]
       return {
         success: result?.success || false,
-        message: result?.message || 'Unknown error occurred'
+        message: result?.message || 'Unknown error occurred',
+        data: result?.data || undefined
       }
     } catch (error) {
       console.error('Staff validation error:', error)
@@ -66,11 +71,12 @@ export class PersonaService {
   }
 
   // Staff Management Functions
-  static async createStaffAccount(name: string, password: string): Promise<PersonaValidationResult> {
+  static async createStaffAccount(name: string, password: string, personName: string): Promise<PersonaValidationResult> {
     try {
       const { data, error } = await supabase.rpc('template_create_staff_account', {
         p_name: name,
-        p_password: password
+        p_password: password,
+        p_person_name: personName
       })
 
       if (error) {

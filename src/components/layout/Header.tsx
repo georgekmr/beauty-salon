@@ -45,23 +45,23 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                 ) : (
                   <Users className="h-4 w-4 text-green-600" />
                 )}
-                <span className="text-xs font-medium text-gray-700 capitalize">
-                  {persona.type}
+                <span className="text-xs font-medium text-gray-700">
+                  {persona.type === 'admin' ? 'Admin' : (persona.personName || persona.loginName || 'Staff')}
                 </span>
-                {persona.loginName && (
+                {persona.type === 'staff' && persona.loginName && (
                   <span className="text-xs text-gray-500">
                     ({persona.loginName})
                   </span>
                 )}
               </div>
             )}
-            
+
             <div className="hidden sm:flex sm:flex-col sm:text-right">
               <span className="text-sm font-medium text-gray-900">
                 {user?.email}
               </span>
               <span className="text-xs text-gray-500">
-                {persona ? `${persona.type} access` : 'No persona selected'}
+                {persona ? (persona.type === 'admin' ? 'Admin access' : `${persona.personName || persona.loginName || 'Staff'} access`) : 'No persona selected'}
               </span>
             </div>
             

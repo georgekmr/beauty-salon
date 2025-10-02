@@ -18,6 +18,7 @@ export interface PersonaData {
   type: PersonaType
   email: string
   loginName?: string // Only for staff
+  personName?: string // Only for staff - the actual person's name
   timestamp: number
 }
 

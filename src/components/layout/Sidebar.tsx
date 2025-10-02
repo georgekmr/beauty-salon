@@ -65,8 +65,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             <div>
               <h1 className="text-xl font-bold text-gray-900">Your App</h1>
               {persona && (
-                <p className="text-xs text-gray-500 capitalize">
-                  {persona.type} Portal
+                <p className="text-xs text-gray-500">
+                  {persona.type === 'admin' ? 'Admin' : (persona.personName || persona.loginName || 'Staff')} Portal
                 </p>
               )}
             </div>

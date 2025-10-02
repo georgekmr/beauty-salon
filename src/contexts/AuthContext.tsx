@@ -93,17 +93,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setPersonaLoading(true)
     try {
       const result = await PersonaService.validateStaffPersona(loginName, password)
-      
+
       if (result.success && user?.email) {
         const personaData: PersonaData = {
           type: 'staff',
           email: user.email,
           loginName,
+          personName: result.data?.person_name,
           timestamp: Date.now()
         }
         savePersona(personaData)
       }
-      
+
       return result
     } finally {
       setPersonaLoading(false)
