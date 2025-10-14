@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
-import { Shield, Users, AlertCircle, Eye, EyeOff, ArrowLeft } from 'lucide-react'
+import { Shield, Users, AlertCircle, Eye, EyeOff, ArrowLeft, LogOut } from 'lucide-react'
 import { PersonaType } from '../../types/auth'
 
 const PersonaSelection: React.FC = () => {
-  const { user, validateAdminPersona, validateStaffPersona, personaLoading, switchPersona, persona } = useAuth()
+  const { user, validateAdminPersona, validateStaffPersona, personaLoading, switchPersona, persona, signOut } = useAuth()
   const [selectedPersona, setSelectedPersona] = useState<PersonaType | null>(null)
   const [password, setPassword] = useState('')
   const [loginName, setLoginName] = useState('')
@@ -55,6 +55,10 @@ const PersonaSelection: React.FC = () => {
     switchPersona()
   }
 
+  const handleLogout = async () => {
+    await signOut()
+  }
+
   // If user already has a persona, show switch option
   if (persona) {
     const displayName = persona.type === 'admin' ? 'Admin' : (persona.personName || persona.loginName || 'Staff')
@@ -80,12 +84,19 @@ const PersonaSelection: React.FC = () => {
           </div>
 
           <div className="bg-white py-8 px-6 shadow-lg rounded-xl border border-gray-100">
-            <div className="space-y-4">
+            <div className="space-y-3">
               <button
                 onClick={handleSwitchPersona}
                 className="w-full flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
               >
                 Switch Persona
+              </button>
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center justify-center space-x-2 py-3 px-4 border border-red-300 rounded-lg shadow-sm text-sm font-medium text-red-700 bg-white hover:bg-red-50 transition-colors"
+              >
+                <LogOut className="h-4 w-4" />
+                <span>Logout</span>
               </button>
             </div>
           </div>
@@ -97,7 +108,14 @@ const PersonaSelection: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
+        <div className="text-center relative">
+          <button
+            onClick={handleLogout}
+            className="absolute -top-2 right-0 p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            title="Logout"
+          >
+            <LogOut className="h-5 w-5" />
+          </button>
           <h2 className="text-3xl font-bold text-gray-900">Select Your Role</h2>
           <p className="mt-2 text-sm text-gray-600">
             Choose your access level to continue
