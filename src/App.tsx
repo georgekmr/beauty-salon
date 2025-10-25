@@ -7,15 +7,19 @@ import Layout from './components/layout/Layout'
 import LoginForm from './components/auth/LoginForm'
 import SignupForm from './components/auth/SignupForm'
 import Dashboard from './pages/Dashboard'
-import Profile from './pages/Profile'
-import PlaceholderPage from './pages/PlaceholderPage'
 import PersonaManagement from './pages/PersonaManagement'
-import { 
-  BarChart3, 
-  FileText, 
-  Mail, 
-  Calendar, 
-  Settings 
+import PlaceholderPage from './pages/PlaceholderPage'
+import {
+  Calendar,
+  ShoppingCart,
+  Users,
+  History,
+  Settings,
+  Package,
+  UserCog,
+  DollarSign,
+  Archive,
+  TrendingUp
 } from 'lucide-react'
 
 function App() {
@@ -23,11 +27,9 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          {/* Public routes */}
           <Route path="/login" element={<LoginForm />} />
           <Route path="/signup" element={<SignupForm />} />
-          
-          {/* Protected routes */}
+
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <PersonaProtectedRoute>
@@ -37,87 +39,7 @@ function App() {
               </PersonaProtectedRoute>
             </ProtectedRoute>
           } />
-          
-          <Route path="/profile" element={
-            <ProtectedRoute>
-              <PersonaProtectedRoute>
-                <Layout>
-                  <Profile />
-                </Layout>
-              </PersonaProtectedRoute>
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/analytics" element={
-            <ProtectedRoute>
-              <PersonaProtectedRoute>
-                <Layout>
-                  <PlaceholderPage 
-                    title="Analytics" 
-                    description="View detailed analytics and insights about your data."
-                    icon={BarChart3}
-                  />
-                </Layout>
-              </PersonaProtectedRoute>
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/documents" element={
-            <ProtectedRoute>
-              <PersonaProtectedRoute>
-                <Layout>
-                  <PlaceholderPage 
-                    title="Documents" 
-                    description="Manage and organize your documents and files."
-                    icon={FileText}
-                  />
-                </Layout>
-              </PersonaProtectedRoute>
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/messages" element={
-            <ProtectedRoute>
-              <PersonaProtectedRoute>
-                <Layout>
-                  <PlaceholderPage 
-                    title="Messages" 
-                    description="Send and receive messages with your team."
-                    icon={Mail}
-                  />
-                </Layout>
-              </PersonaProtectedRoute>
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/calendar" element={
-            <ProtectedRoute>
-              <PersonaProtectedRoute>
-                <Layout>
-                  <PlaceholderPage 
-                    title="Calendar" 
-                    description="Schedule and manage your events and appointments."
-                    icon={Calendar}
-                  />
-                </Layout>
-              </PersonaProtectedRoute>
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/settings" element={
-            <ProtectedRoute>
-              <PersonaProtectedRoute>
-                <Layout>
-                  <PlaceholderPage 
-                    title="Settings" 
-                    description="Configure your application settings and preferences."
-                    icon={Settings}
-                  />
-                </Layout>
-              </PersonaProtectedRoute>
-            </ProtectedRoute>
-          } />
-          
+
           <Route path="/persona-management" element={
             <ProtectedRoute>
               <PersonaProtectedRoute>
@@ -127,8 +49,161 @@ function App() {
               </PersonaProtectedRoute>
             </ProtectedRoute>
           } />
-          
-          {/* Redirect root to dashboard */}
+
+          <Route path="/calendar" element={
+            <ProtectedRoute>
+              <PersonaProtectedRoute>
+                <Layout>
+                  <PlaceholderPage
+                    title="Calendar"
+                    description="Schedule and manage appointments."
+                    icon={Calendar}
+                  />
+                </Layout>
+              </PersonaProtectedRoute>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/pos" element={
+            <ProtectedRoute>
+              <PersonaProtectedRoute>
+                <Layout>
+                  <PlaceholderPage
+                    title="Point of Sale"
+                    description="Process sales and payments."
+                    icon={ShoppingCart}
+                  />
+                </Layout>
+              </PersonaProtectedRoute>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/clients" element={
+            <ProtectedRoute>
+              <PersonaProtectedRoute>
+                <Layout>
+                  <PlaceholderPage
+                    title="Clients"
+                    description="Manage client information and history."
+                    icon={Users}
+                  />
+                </Layout>
+              </PersonaProtectedRoute>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/sales-history" element={
+            <ProtectedRoute>
+              <PersonaProtectedRoute>
+                <Layout>
+                  <PlaceholderPage
+                    title="Sales History"
+                    description="View past sales and transactions."
+                    icon={History}
+                  />
+                </Layout>
+              </PersonaProtectedRoute>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/management/services" element={
+            <ProtectedRoute>
+              <PersonaProtectedRoute>
+                <Layout>
+                  <PlaceholderPage
+                    title="Services"
+                    description="Manage service offerings and pricing."
+                    icon={Settings}
+                  />
+                </Layout>
+              </PersonaProtectedRoute>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/management/products" element={
+            <ProtectedRoute>
+              <PersonaProtectedRoute>
+                <Layout>
+                  <PlaceholderPage
+                    title="Products"
+                    description="Manage product inventory and pricing."
+                    icon={Package}
+                  />
+                </Layout>
+              </PersonaProtectedRoute>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/management/staff" element={
+            <ProtectedRoute>
+              <PersonaProtectedRoute>
+                <Layout>
+                  <PlaceholderPage
+                    title="Staff and Schedules"
+                    description="Manage staff members and work schedules."
+                    icon={UserCog}
+                  />
+                </Layout>
+              </PersonaProtectedRoute>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/reports/sales" element={
+            <ProtectedRoute>
+              <PersonaProtectedRoute>
+                <Layout>
+                  <PlaceholderPage
+                    title="Sales Reports"
+                    description="View detailed sales analytics and reports."
+                    icon={DollarSign}
+                  />
+                </Layout>
+              </PersonaProtectedRoute>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/reports/inventory" element={
+            <ProtectedRoute>
+              <PersonaProtectedRoute>
+                <Layout>
+                  <PlaceholderPage
+                    title="Inventory Reports"
+                    description="Track product inventory and stock levels."
+                    icon={Archive}
+                  />
+                </Layout>
+              </PersonaProtectedRoute>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/reports/clients" element={
+            <ProtectedRoute>
+              <PersonaProtectedRoute>
+                <Layout>
+                  <PlaceholderPage
+                    title="Client Reports"
+                    description="Analyze client behavior and trends."
+                    icon={Users}
+                  />
+                </Layout>
+              </PersonaProtectedRoute>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/reports/staff-performance" element={
+            <ProtectedRoute>
+              <PersonaProtectedRoute>
+                <Layout>
+                  <PlaceholderPage
+                    title="Staff Performance Reports"
+                    description="Track staff performance and productivity."
+                    icon={TrendingUp}
+                  />
+                </Layout>
+              </PersonaProtectedRoute>
+            </ProtectedRoute>
+          } />
+
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </Router>
