@@ -9,14 +9,14 @@ import SignupForm from './components/auth/SignupForm'
 import Dashboard from './pages/Dashboard'
 import PersonaManagement from './pages/PersonaManagement'
 import PlaceholderPage from './pages/PlaceholderPage'
+import ServicesManagement from './pages/ServicesManagement'
+import ProductsManagement from './pages/ProductsManagement'
+import StaffManagement from './pages/StaffManagement'
 import {
   Calendar,
   ShoppingCart,
   Users,
   History,
-  Settings,
-  Package,
-  UserCog,
   DollarSign,
   Archive,
   TrendingUp
@@ -110,11 +110,7 @@ function App() {
             <ProtectedRoute>
               <PersonaProtectedRoute>
                 <Layout>
-                  <PlaceholderPage
-                    title="Services"
-                    description="Manage service offerings and pricing."
-                    icon={Settings}
-                  />
+                  <ServicesManagement />
                 </Layout>
               </PersonaProtectedRoute>
             </ProtectedRoute>
@@ -124,11 +120,7 @@ function App() {
             <ProtectedRoute>
               <PersonaProtectedRoute>
                 <Layout>
-                  <PlaceholderPage
-                    title="Products"
-                    description="Manage product inventory and pricing."
-                    icon={Package}
-                  />
+                  <ProductsManagement />
                 </Layout>
               </PersonaProtectedRoute>
             </ProtectedRoute>
@@ -138,11 +130,7 @@ function App() {
             <ProtectedRoute>
               <PersonaProtectedRoute>
                 <Layout>
-                  <PlaceholderPage
-                    title="Staff and Schedules"
-                    description="Manage staff members and work schedules."
-                    icon={UserCog}
-                  />
+                  <StaffManagement />
                 </Layout>
               </PersonaProtectedRoute>
             </ProtectedRoute>
