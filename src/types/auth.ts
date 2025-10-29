@@ -9,12 +9,13 @@ export interface Session {
   access_token: string
   refresh_token: string
   expires_at?: number
-  user: User
+  user: User 
 }
 
+export type PersonaType = 'admin' | 'staff'
 
 export interface PersonaData {
-  type: string
+  type: PersonaType
   email: string
   id?: number // Database ID from validation
   loginName?: string // Only for staff - login username
