@@ -46,7 +46,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                   <Users className="h-4 w-4 text-green-600" />
                 )}
                 <span className="text-xs font-medium text-gray-700">
-                  {persona.type === 'admin' ? 'Admin' : (persona.personName || persona.loginName || 'Staff')}
+                  {persona.personName || (persona.type === 'admin' ? 'Admin' : (persona.loginName || 'Staff'))}
                 </span>
                 {persona.type === 'staff' && persona.loginName && (
                   <span className="text-xs text-gray-500">
@@ -61,7 +61,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
                 {user?.email}
               </span>
               <span className="text-xs text-gray-500">
-                {persona ? (persona.type === 'admin' ? 'Admin access' : `${persona.personName || persona.loginName || 'Staff'} access`) : 'No persona selected'}
+                {persona ? `${persona.personName || (persona.type === 'admin' ? 'Admin' : (persona.loginName || 'Staff'))} access` : 'No persona selected'}
               </span>
             </div>
             

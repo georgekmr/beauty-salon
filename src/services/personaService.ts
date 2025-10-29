@@ -4,6 +4,8 @@ export interface PersonaValidationResult {
   success: boolean
   message: string
   data?: {
+    id?: number
+    name?: string
     user_type?: string
     person_name?: string
   }
@@ -28,7 +30,8 @@ export class PersonaService {
       const result = data?.[0]
       return {
         success: result?.success || false,
-        message: result?.message || 'Unknown error occurred'
+        message: result?.message || 'Unknown error occurred',
+        data: result?.data || undefined
       }
     } catch (error) {
       console.error('Admin validation error:', error)

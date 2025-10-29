@@ -61,7 +61,9 @@ const PersonaSelection: React.FC = () => {
 
   // If user already has a persona, show switch option
   if (persona) {
-    const displayName = persona.type === 'admin' ? 'Admin' : (persona.personName || persona.loginName || 'Staff')
+    // For admin: show personName if available, otherwise "Admin"
+    // For staff: show personName if available, otherwise loginName, otherwise "Staff"
+    const displayName = persona.personName || (persona.type === 'admin' ? 'Admin' : (persona.loginName || 'Staff'))
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
