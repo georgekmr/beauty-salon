@@ -76,7 +76,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (result.success && user?.email) {
         const personaData: PersonaData = {
-          type: 'admin',
+          type: result.data?.user_type,
           email: user.email,
           id: result.data?.id,
           loginName: result.data?.name,
@@ -99,7 +99,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (result.success && user?.email) {
         const personaData: PersonaData = {
-          type: 'staff',
+          type: result.data?.user_type,
           email: user.email,
           id: result.data?.id,
           loginName: result.data?.name || loginName,
