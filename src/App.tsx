@@ -12,6 +12,8 @@ import PlaceholderPage from './pages/PlaceholderPage'
 import ServicesManagement from './pages/ServicesManagement'
 import ProductsManagement from './pages/ProductsManagement'
 import StaffManagement from './pages/StaffManagement'
+import ClientsPage from './pages/ClientsPage'
+import ClientProfilePage from './pages/ClientProfilePage'
 import {
   Calendar,
   ShoppingCart,
@@ -82,11 +84,17 @@ function App() {
             <ProtectedRoute>
               <PersonaProtectedRoute>
                 <Layout>
-                  <PlaceholderPage
-                    title="Clients"
-                    description="Manage client information and history."
-                    icon={Users}
-                  />
+                  <ClientsPage />
+                </Layout>
+              </PersonaProtectedRoute>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/clients/:clientId" element={
+            <ProtectedRoute>
+              <PersonaProtectedRoute>
+                <Layout>
+                  <ClientProfilePage />
                 </Layout>
               </PersonaProtectedRoute>
             </ProtectedRoute>
