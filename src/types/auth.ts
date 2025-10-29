@@ -12,10 +12,8 @@ export interface Session {
   user: User 
 }
 
-export type PersonaType = 'admin' | 'staff'
-
 export interface PersonaData {
-  type: PersonaType
+  type: string
   email: string
   id?: number // Database ID from validation
   loginName?: string // Only for staff - login username
