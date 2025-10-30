@@ -44,7 +44,7 @@ export interface ClientSale {
 export const clientsService = {
   async searchClients(query: string): Promise<Client[]> {
   let queryBuilder = supabase
-    .from('bs_clients')
+    .from('bs_clients') 
     .select('*')
 
   // 2. Check if the search query is not empty.
