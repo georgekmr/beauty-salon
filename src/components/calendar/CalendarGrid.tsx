@@ -106,13 +106,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
 
             {/* Time slots */}
             <div className="relative bg-white">
-              {hours.map((hour) => (
-                <div
-                  key={hour}
-                  onClick={() => onTimeSlotClick(member.staff_id, new Date(viewDate.setHours(hour, 0, 0, 0)))}
-                  className="h-12 border-b border-gray-100 hover:bg-blue-50 cursor-pointer transition-colors"
-                />
-              ))}
+              
 
               {/* Appointments overlay */}
               <div className="absolute inset-0">
