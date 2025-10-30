@@ -48,7 +48,6 @@ export const calendarService = {
         appointment_id,
         client_id,
         staff_id,
-        service_id,
         appointment_datetime,
         status,
         notes,
