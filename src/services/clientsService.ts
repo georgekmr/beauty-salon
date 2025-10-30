@@ -43,35 +43,20 @@ export interface ClientSale {
 
 export const clientsService = {
   async searchClients(query: string): Promise<Client[]> {
-  let queryBuilder = supabase
-    .from('bs_clients') 
-    .select('*')
+    const { data, error } = await supabase
+      .from('bs_clients') 
+      .select('*')
+      .or(`phone_number.ilike.%${query}%,first_name.ilike.%${query}%,last_name.ilike.%${query}%`)
+      .order('first_name', { ascending: true })
+      .limit(50)
 
-  // 2. Check if the search query is not empty.
-  //    This check prevents the filter from running on an empty string.
-  
+    if (error) {
+      console.error('Error searching clients:', error)
+      throw error
+    }
 
-  // 4. Add sorting and limits to the final query.
-  //    This runs regardless of whether a filter was applied.
-  queryBuilder = queryBuilder
-    .order('first_name', { ascending: true })
-    .limit(50)
-
-  // 5. Execute the query and handle potential errors.
-  const { data, error } = await queryBuilder
-
-  if (error) {
-    console.error('Error searching clients:', error)
-    // It's good practice to also log the failed query for debugging.
-    console.error('Failed query:', queryBuilder.toString()) 
-    throw error
-  }
-
-  // For debugging: check what data is being returned.
-  // console.log('Data fetched from Supabase:', data);
-
-  return data || []
-},
+    return data || []
+  },
 
   async getClientById(clientId: number): Promise<Client | null> {
     const { data, error } = await supabase
