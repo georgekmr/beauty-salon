@@ -27,7 +27,6 @@ export interface CalendarAppointment {
 export interface BookAppointmentInput {
   client_id: number
   staff_id: number
-  service_id: number
   appointment_datetime: string
   notes?: string
 }
