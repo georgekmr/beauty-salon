@@ -46,19 +46,34 @@ export const clientsService = {
   let queryBuilder = supabase
     .from('bs_clients')
     .select('*')
+
+  // 2. Check if the search query is not empty.
+  //    This check prevents the filter from running on an empty string.
+  if (query && query.trim() !== '') {
+    // 3. If there is a query, add the .or() filter to search the relevant columns.
+    queryBuilder = queryBuilder.or(
+      `phone_number.ilike.%${query}%,first_name.ilike.%${query}%,last_name.ilike.%${query}%`
+    )
+  }
+
+  // 4. Add sorting and limits to the final query.
+  //    This runs regardless of whether a filter was applied.
+  queryBuilder = queryBuilder
     .order('first_name', { ascending: true })
     .limit(50)
 
-  if (query && query.trim() !== '') { 
-    queryBuilder = queryBuilder.or(`phone_number.ilike.%${query}%,first_name.ilike.%${query}%,last_name.ilike.%${query}%`)
-  }
-
+  // 5. Execute the query and handle potential errors.
   const { data, error } = await queryBuilder
 
   if (error) {
     console.error('Error searching clients:', error)
+    // It's good practice to also log the failed query for debugging.
+    console.error('Failed query:', queryBuilder.toString()) 
     throw error
   }
+
+  // For debugging: check what data is being returned.
+  // console.log('Data fetched from Supabase:', data);
 
   return data || []
 },
