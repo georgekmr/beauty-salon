@@ -42,7 +42,7 @@ export interface ClientSale {
 }
 
 export const clientsService = {
-  async function searchClients(query: string): Promise<Client[]> {
+  async searchClients(query: string): Promise<Client[]> {
   let queryBuilder = supabase
     .from('bs_clients')
     .select('*')
