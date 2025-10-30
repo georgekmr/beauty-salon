@@ -191,7 +191,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
                 ))}
 
                 {/* Show all appointments for all staff on this day */}
-                <div className="absolute inset-0">
+                <div className="absolute inset-0 pointer-events-none">
                   {appointments
                     .filter((appt) => new Date(appt.appointment_datetime).toDateString() === date.toDateString())
                     .map((appointment) => {
@@ -201,7 +201,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
                       return (
                         <div
                           key={appointment.appointment_id}
-                          onClick={() => onAppointmentClick(appointment)}
+                          onClick={(event) => onAppointmentClick(appointment, event)} 
                           className={`absolute left-1 right-1 rounded-md p-1 cursor-pointer hover:shadow-lg transition-shadow border-l-4 ${getStatusColor(appointment.status)}`}
                           style={{
                             top: `${(topPercent / 100) * totalHeight}px`,
