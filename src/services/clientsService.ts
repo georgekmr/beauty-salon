@@ -49,7 +49,7 @@ export const clientsService = {
     .order('first_name', { ascending: true })
     .limit(50)
 
-  if (query) {
+  if (query && query.trim() !== '') {
     queryBuilder = queryBuilder.or(`phone_number.ilike.%${query}%,first_name.ilike.%${query}%,last_name.ilike.%${query}%`)
   }
 
