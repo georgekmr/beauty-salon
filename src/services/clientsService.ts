@@ -49,12 +49,7 @@ export const clientsService = {
 
   // 2. Check if the search query is not empty.
   //    This check prevents the filter from running on an empty string.
-  if (query && query.trim() !== '') {
-    // 3. If there is a query, add the .or() filter to search the relevant columns.
-    queryBuilder = queryBuilder.or(
-      `phone_number.ilike.%${query}%,first_name.ilike.%${query}%,last_name.ilike.%${query}%`
-    )
-  }
+  
 
   // 4. Add sorting and limits to the final query.
   //    This runs regardless of whether a filter was applied.
