@@ -90,7 +90,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
         {hours.map((hour) => (
           <div key={hour} className="h-12 border-b border-gray-200 flex items-start pt-1">
             <span className="text-xs text-gray-600 px-1">{hour}:00</span>
-          </div> 
+          </div>
         ))}
       </div>
 
@@ -105,7 +105,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
             </div>
 
             {/* Time slots */}
-            <div className="relative bg-white"> 
+            <div className="relative bg-white">
               {hours.map((hour) => (
                 <div
                   key={hour}
@@ -115,7 +115,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
               ))}
 
               {/* Appointments overlay */}
-              <div className="absolute inset-0">
+              <div className="absolute inset-0 pointer-events-none">
                 {getStaffAppointments(member.staff_id).map((appointment) => {
                   const { topPercent, heightPercent } = getAppointmentPosition(appointment)
                   const totalHeight = hours.length * 48
@@ -123,7 +123,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
                   return (
                     <div
                       key={appointment.appointment_id}
-                      onClick={() => onAppointmentClick(appointment)}
+                      onClick={(event) => onAppointmentClick(appointment, event)} 
                       className={`absolute left-1 right-1 rounded-md p-2 cursor-pointer hover:shadow-lg transition-shadow border-l-4 ${getStatusColor(appointment.status)}`}
                       style={{
                         top: `${(topPercent / 100) * totalHeight}px`,
@@ -191,32 +191,34 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
                 ))}
 
                 {/* Show all appointments for all staff on this day */}
-                <div className="absolute inset-0 pointer-events-none">
-    {getStaffAppointments(member.staff_id).map((appointment) => {
-      const { topPercent, heightPercent } = getAppointmentPosition(appointment)
-      const totalHeight = hours.length * 48
+                <div className="absolute inset-0">
+                  {appointments
+                    .filter((appt) => new Date(appt.appointment_datetime).toDateString() === date.toDateString())
+                    .map((appointment) => {
+                      const { topPercent, heightPercent } = getAppointmentPosition(appointment)
+                      const totalHeight = hours.length * 48
 
-      return (
-        <div
-          key={appointment.appointment_id}
-          // The event needs to be passed to the handler
-          onClick={(event) => onAppointmentClick(appointment, event)} 
-          // Re-enable pointer events for the appointment block itself
-          className={`absolute left-1 right-1 rounded-md p-2 cursor-pointer hover:shadow-lg transition-shadow border-l-4 ${getStatusColor(appointment.status)} pointer-events-auto`}
-          style={{
-            top: `${(topPercent / 100) * totalHeight}px`,
-            height: `${(heightPercent / 100) * totalHeight}px`,
-            minHeight: '24px'
-          }}
-        >
-          <p className="text-xs font-semibold text-white truncate">
-            {appointment.bs_clients.first_name}
-          </p>
-          <p className="text-xs text-white truncate">{appointment.bs_services?.service_name}</p>
-        </div>
-      )
-    })}
-  </div>
+                      return (
+                        <div
+                          key={appointment.appointment_id}
+                          onClick={() => onAppointmentClick(appointment)}
+                          className={`absolute left-1 right-1 rounded-md p-1 cursor-pointer hover:shadow-lg transition-shadow border-l-4 ${getStatusColor(appointment.status)}`}
+                          style={{
+                            top: `${(topPercent / 100) * totalHeight}px`,
+                            height: `${(heightPercent / 100) * totalHeight}px`,
+                            minHeight: '20px'
+                          }}
+                        >
+                          <p className="text-xs font-semibold text-white truncate">
+                            {appointment.bs_staff.first_name}
+                          </p>
+                          <p className="text-xs text-white truncate">
+                            {appointment.bs_clients.first_name}
+                          </p>
+                        </div>
+                      )
+                    })}
+                </div>
               </div>
             </div>
           ))}
