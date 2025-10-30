@@ -99,10 +99,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
         {visibleStaff.map((member) => (
           <div key={member.staff_id} className="flex-1 min-w-[200px] border-r border-gray-200">
             {/* Staff header */}
-            <div className="h-12 border-b border-gray-200 px-3 py-2 bg-gray-50 sticky top-0">
-              <p className="text-sm font-semibold text-gray-900">{member.first_name} {member.last_name}</p>
-              {member.specialty && <p className="text-xs text-gray-600">{member.specialty}</p>}
-            </div>
+           
 
             {/* Time slots */}
             <div className="relative bg-white"> 
