@@ -123,7 +123,7 @@ export const calendarService = {
       .from('bs_appointments')
       .insert([{
         ...appointment,
-        status: 'scheduled'
+        status: 'Scheduled'
       }])
       .select(`
         appointment_id,
