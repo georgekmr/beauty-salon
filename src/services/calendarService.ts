@@ -26,7 +26,8 @@ export interface CalendarAppointment {
 
 export interface BookAppointmentInput {
   client_id: number
-  staff_id: number 
+  staff_id: number
+  service_id: number
   appointment_datetime: string
   notes?: string
 }
@@ -34,7 +35,7 @@ export interface BookAppointmentInput {
 export interface RescheduleInput {
   appointment_datetime: string
 }
-
+ 
 export const calendarService = {
   async getAppointmentsByDate(date: Date): Promise<CalendarAppointment[]> {
     const startOfDay = new Date(date)
@@ -48,6 +49,7 @@ export const calendarService = {
         appointment_id,
         client_id,
         staff_id,
+        service_id,
         appointment_datetime,
         status,
         notes,
@@ -60,6 +62,10 @@ export const calendarService = {
           staff_id,
           first_name,
           last_name
+        ),
+        bs_services (
+          service_name,
+          duration_minutes
         )
       `)
       .gte('appointment_datetime', startOfDay.toISOString())
