@@ -191,7 +191,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
                 ))}
 
                 {/* Show all appointments for all staff on this day */}
-                <div className="absolute inset-0">
+                <div className="absolute inset-0 pointer-events-none">
                   {appointments
                     .filter((appt) => new Date(appt.appointment_datetime).toDateString() === date.toDateString())
                     .map((appointment) => {
