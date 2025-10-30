@@ -60,10 +60,6 @@ export const calendarService = {
           staff_id,
           first_name,
           last_name
-        ),
-        bs_services (
-          service_name,
-          duration_minutes
         )
       `)
       .gte('appointment_datetime', startOfDay.toISOString())
