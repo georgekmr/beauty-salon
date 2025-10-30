@@ -123,7 +123,7 @@ const CalendarPage: React.FC = () => {
 
   const handleCheckIn = async (appointmentId: number) => {
     try {
-      await calendarService.updateAppointmentStatus(appointmentId, 'checked-in')
+      await calendarService.updateAppointmentStatus(appointmentId, 'Checked-in')
       await loadAppointments()
     } catch (error) {
       alert('Error checking in appointment')
