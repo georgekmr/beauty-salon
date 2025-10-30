@@ -237,7 +237,7 @@ export const calendarService = {
   async cancelAppointment(appointmentId: number): Promise<void> {
     const { error } = await supabase
       .from('bs_appointments')
-      .update({ status: 'cancelled' })
+      .update({ status: 'Cancelled' })
       .eq('appointment_id', appointmentId)
 
     if (error) {
