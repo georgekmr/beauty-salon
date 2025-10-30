@@ -14,8 +14,8 @@ import ProductsManagement from './pages/ProductsManagement'
 import StaffManagement from './pages/StaffManagement'
 import ClientsPage from './pages/ClientsPage'
 import ClientProfilePage from './pages/ClientProfilePage'
+import CalendarPage from './pages/Calendar'
 import {
-  Calendar,
   ShoppingCart,
   Users,
   History,
@@ -56,11 +56,7 @@ function App() {
             <ProtectedRoute>
               <PersonaProtectedRoute>
                 <Layout>
-                  <PlaceholderPage
-                    title="Calendar"
-                    description="Schedule and manage appointments."
-                    icon={Calendar}
-                  />
+                  <CalendarPage />
                 </Layout>
               </PersonaProtectedRoute>
             </ProtectedRoute>
