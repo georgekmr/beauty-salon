@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react' // ADDED useEffect and useCallback
 import { useNavigate } from 'react-router-dom'
 import { clientsService, Client, ClientInput } from '../services/clientsService'
 import { Search, Plus, X, Phone, Mail, User } from 'lucide-react'
@@ -19,21 +19,31 @@ const ClientsPage: React.FC = () => {
   })
   const [formError, setFormError] = useState('')
 
-  const handleSearch = async () => {
-    if (!searchQuery.trim()) {
-      setSearchResults([])
-      return
-    }
-
+  // ADDED: A reusable function to fetch clients
+  const fetchClients = useCallback(async (query: string) => {
     try {
       setSearching(true)
-      const results = await clientsService.searchClients(searchQuery)
+      const results = await clientsService.searchClients(query)
       setSearchResults(results)
     } catch (error) {
       console.error('Error searching clients:', error)
+      setSearchResults([]) // Clear results on error
     } finally {
       setSearching(false)
     }
+  }, []) // Empty dependency array means this function is created once
+
+  // ADDED: useEffect to fetch all clients when the page loads
+  useEffect(() => {
+    fetchClients('') // Pass an empty string to get all clients initially
+  }, [fetchClients])
+
+
+  // CHANGED: This function is now much simpler
+  const handleSearch = () => {
+    // We just call our reusable fetch function with the current query.
+    // The backend service will handle whether the query is empty or not.
+    fetchClients(searchQuery)
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -76,6 +86,7 @@ const ClientsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* ... The rest of your JSX remains the same ... */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Clients</h1>
@@ -152,18 +163,19 @@ const ClientsPage: React.FC = () => {
                 ))}
               </div>
             ) : searchQuery ? (
-              <div className="text-center py-12 text-gray-500">
-                No clients found matching "{searchQuery}"
-              </div>
+                <div className="text-center py-12 text-gray-500">
+                  No clients found matching "{searchQuery}"
+                </div>
             ) : (
-              <div className="text-center py-12 text-gray-500">
-                Enter a phone number, first name, or last name to search
-              </div>
+                <div className="text-center py-12 text-gray-500">
+                  You have no clients yet. Click "New Client" to add one.
+                </div>
             )}
           </div>
         </div>
       </div>
 
+      {/* ... The rest of your JSX for the modal ... */}
       {showRegistrationModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
