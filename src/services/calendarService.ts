@@ -3,7 +3,8 @@ import { supabase } from '../lib/supabase'
 export interface CalendarAppointment {
   appointment_id: number
   client_id: number
-  staff_id: number
+  staff_id: number 
+  service_id: number
   appointment_datetime: string
   status: string
   notes: string | null
