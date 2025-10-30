@@ -42,21 +42,26 @@ export interface ClientSale {
 }
 
 export const clientsService = {
-  async searchClients(query: string): Promise<Client[]> {
-    const { data, error } = await supabase
-      .from('bs_clients')
-      .select('*')
-      .or(`phone_number.ilike.%${query}%,first_name.ilike.%${query}%,last_name.ilike.%${query}%`)
-      .order('first_name', { ascending: true })
-      .limit(50)
+  async function searchClients(query: string): Promise<Client[]> {
+  let queryBuilder = supabase
+    .from('bs_clients')
+    .select('*')
+    .order('first_name', { ascending: true })
+    .limit(50)
 
-    if (error) {
-      console.error('Error searching clients:', error)
-      throw error
-    }
+  if (query) {
+    queryBuilder = queryBuilder.or(`phone_number.ilike.%${query}%,first_name.ilike.%${query}%,last_name.ilike.%${query}%`)
+  }
 
-    return data || []
-  },
+  const { data, error } = await queryBuilder
+
+  if (error) {
+    console.error('Error searching clients:', error)
+    throw error
+  }
+
+  return data || []
+},
 
   async getClientById(clientId: number): Promise<Client | null> {
     const { data, error } = await supabase
