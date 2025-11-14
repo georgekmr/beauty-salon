@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { CalendarAppointment } from '../../services/calendarService'
 import { Staff } from '../../services/staffService'
-import { Clock, MapPin } from 'lucide-react'
 
 interface CalendarGridProps {
   appointments: CalendarAppointment[]
@@ -10,13 +9,15 @@ interface CalendarGridProps {
   viewDate: Date
   viewType: 'day' | 'week'
   onTimeSlotClick: (staffId: number, time: Date) => void
-  onAppointmentClick: (appointment: CalendarAppointment) => void
+  onAppointmentClick: (appointment: CalendarAppointment, event: React.MouseEvent) => void
 }
 
 const BUSINESS_HOURS = {
-  start: 9,
-  end: 18
+  start: 0,
+  end: 24
 }
+
+const SLOT_HEIGHT = 30
 
 const CalendarGrid: React.FC<CalendarGridProps> = ({
   appointments,
@@ -51,12 +52,15 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
     const minutes = appointmentTime.getMinutes()
 
     const offsetFromBusinessStart = (hour - BUSINESS_HOURS.start) * 60 + minutes
-    const topPercent = (offsetFromBusinessStart / (60 * (BUSINESS_HOURS.end - BUSINESS_HOURS.start))) * 100
+    const topSlots = offsetFromBusinessStart / 30
 
     const duration = appointment.bs_services?.duration_minutes || 60
-    const heightPercent = (duration / (60 * (BUSINESS_HOURS.end - BUSINESS_HOURS.start))) * 100
+    const heightSlots = duration / 30
 
-    return { topPercent, heightPercent }
+    return {
+      topPixels: topSlots * SLOT_HEIGHT,
+      heightPixels: heightSlots * SLOT_HEIGHT
+    }
   }
 
   const getStaffAppointments = (staffId: number) => {
@@ -82,69 +86,91 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
     return appointments.filter(appt => appt.staff_id === staffId && dateFilter(appt))
   }
 
-  const renderDayView = () => (
-    <div className="flex gap-1 bg-white rounded-lg border border-gray-200 overflow-auto h-[600px]">
-      {/* Time labels column */}
-      <div className="w-16 border-r border-gray-200 flex-shrink-0">
-        <div className="h-12 border-b border-gray-200"></div>
-        {hours.map((hour) => (
-          <div key={hour} className="h-12 border-b border-gray-200 flex items-start pt-1">
-            <span className="text-xs text-gray-600 px-1">{hour}:00</span>
-          </div>
-        ))}
-      </div>
+  const renderDayView = () => {
+    const timeSlots = Array.from({ length: 48 }, (_, i) => {
+      const hour = Math.floor(i / 2)
+      const minutes = (i % 2) * 30
+      return { hour, minutes, slot: i }
+    })
 
-      {/* Staff columns */}
-      <div className="flex gap-1 flex-1 overflow-x-auto">
-        {visibleStaff.map((member) => (
-          <div key={member.staff_id} className="flex-1 min-w-[200px] border-r border-gray-200">
-            {/* Staff header */}
-            <div className="h-12 border-b border-gray-200 px-3 py-2 bg-gray-50 sticky top-0">
-              <p className="text-sm font-semibold text-gray-900">{member.first_name} {member.last_name}</p>
-              {member.specialty && <p className="text-xs text-gray-600">{member.specialty}</p>}
+    return (
+      <div className="flex gap-1 bg-white rounded-lg border border-gray-200 overflow-auto" style={{ height: 'calc(100vh - 300px)' }}>
+        {/* Time labels column */}
+        <div className="w-20 border-r border-gray-200 flex-shrink-0 overflow-y-auto bg-gray-50">
+          <div style={{ height: `${SLOT_HEIGHT}px` }} className="border-b border-gray-200"></div>
+          {hours.map((hour) => (
+            <div key={hour} style={{ height: `${SLOT_HEIGHT * 2}px` }} className="border-b border-gray-200 flex items-start pt-1">
+              <span className="text-xs text-gray-600 px-1">
+                {String(hour).padStart(2, '0')}:00
+              </span>
             </div>
+          ))}
+        </div>
 
-            {/* Time slots */}
-            <div className="relative bg-white">
-              {hours.map((hour) => (
-                <div
-                  key={hour}
-                  onClick={() => onTimeSlotClick(member.staff_id, new Date(viewDate.setHours(hour, 0, 0, 0)))}
-                  className="h-12 border-b border-gray-100 hover:bg-blue-50 cursor-pointer transition-colors"
-                />
-              ))}
+        {/* Staff columns */}
+        <div className="flex gap-1 flex-1 overflow-x-auto">
+          {visibleStaff.map((member) => (
+            <div key={member.staff_id} className="flex-1 min-w-[250px] border-r border-gray-200">
+              {/* Staff header */}
+              <div style={{ height: `${SLOT_HEIGHT}px` }} className="border-b border-gray-200 px-3 py-1 bg-gray-50 sticky top-0 z-10 flex items-center">
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">{member.first_name} {member.last_name}</p>
+                  {member.specialty && <p className="text-xs text-gray-600">{member.specialty}</p>}
+                </div>
+              </div>
 
-              {/* Appointments overlay */}
-              <div className="absolute inset-0 pointer-events-none">
-                {getStaffAppointments(member.staff_id).map((appointment) => {
-                  const { topPercent, heightPercent } = getAppointmentPosition(appointment)
-                  const totalHeight = hours.length * 48
+              {/* Time slots */}
+              <div className="relative bg-white">
+                {timeSlots.map((slot) => (
+                  <div
+                    key={slot.slot}
+                    onClick={() => {
+                      const clickTime = new Date(viewDate)
+                      clickTime.setHours(slot.hour, slot.minutes, 0, 0)
+                      onTimeSlotClick(member.staff_id, clickTime)
+                    }}
+                    style={{ height: `${SLOT_HEIGHT}px` }}
+                    className="border-b border-gray-100 hover:bg-blue-50 cursor-pointer transition-colors"
+                  />
+                ))}
 
-                  return (
-                    <div
-                      key={appointment.appointment_id}
-                      onClick={(event) => onAppointmentClick(appointment, event)} 
-                      className={`absolute left-1 right-1 rounded-md p-2 cursor-pointer hover:shadow-lg transition-shadow border-l-4 ${getStatusColor(appointment.status)}`}
-                      style={{
-                        top: `${(topPercent / 100) * totalHeight}px`,
-                        height: `${(heightPercent / 100) * totalHeight}px`,
-                        minHeight: '24px'
-                      }}
-                    >
-                      <p className="text-xs font-semibold text-white truncate">
-                        {appointment.bs_clients.first_name}
-                      </p>
-                      <p className="text-xs text-white truncate">{appointment.bs_services?.service_name}</p>
-                    </div>
-                  )
-                })}
+                {/* Appointments overlay */}
+                <div className="absolute inset-0 pointer-events-none">
+                  {getStaffAppointments(member.staff_id).map((appointment) => {
+                    const { topPixels, heightPixels } = getAppointmentPosition(appointment)
+
+                    return (
+                      <div
+                        key={appointment.appointment_id}
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          onAppointmentClick(appointment, event)
+                        }}
+                        className={`absolute left-1 right-1 rounded-md p-1 cursor-pointer hover:shadow-lg transition-shadow border-l-4 pointer-events-auto ${getStatusColor(appointment.status)}`}
+                        style={{
+                          top: `${topPixels}px`,
+                          height: `${heightPixels}px`,
+                          minHeight: '24px'
+                        }}
+                      >
+                        <p className="text-xs font-semibold text-white truncate">
+                          {appointment.bs_clients.first_name}
+                        </p>
+                        <p className="text-xs text-white truncate">{appointment.bs_services?.service_name}</p>
+                        <p className="text-xs text-white truncate">
+                          {new Date(appointment.appointment_datetime).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                      </div>
+                    )
+                  })}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 
   const renderWeekView = () => {
     const weekStart = new Date(viewDate)
@@ -156,14 +182,22 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
       return date
     })
 
+    const timeSlots = Array.from({ length: 48 }, (_, i) => {
+      const hour = Math.floor(i / 2)
+      const minutes = (i % 2) * 30
+      return { hour, minutes, slot: i }
+    })
+
     return (
-      <div className="flex gap-1 bg-white rounded-lg border border-gray-200 overflow-auto h-[600px]">
+      <div className="flex gap-1 bg-white rounded-lg border border-gray-200 overflow-auto" style={{ height: 'calc(100vh - 300px)' }}>
         {/* Time labels column */}
-        <div className="w-16 border-r border-gray-200 flex-shrink-0">
-          <div className="h-12 border-b border-gray-200"></div>
+        <div className="w-20 border-r border-gray-200 flex-shrink-0 overflow-y-auto bg-gray-50">
+          <div style={{ height: `${SLOT_HEIGHT}px` }} className="border-b border-gray-200"></div>
           {hours.map((hour) => (
-            <div key={hour} className="h-12 border-b border-gray-200 flex items-start pt-1">
-              <span className="text-xs text-gray-600 px-1">{hour}:00</span>
+            <div key={hour} style={{ height: `${SLOT_HEIGHT * 2}px` }} className="border-b border-gray-200 flex items-start pt-1">
+              <span className="text-xs text-gray-600 px-1">
+                {String(hour).padStart(2, '0')}:00
+              </span>
             </div>
           ))}
         </div>
@@ -173,20 +207,27 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
           {days.map((date) => (
             <div key={date.toDateString()} className="flex-1 min-w-[150px] border-r border-gray-200">
               {/* Day header */}
-              <div className="h-12 border-b border-gray-200 px-2 py-2 bg-gray-50 sticky top-0">
-                <p className="text-xs font-semibold text-gray-900">
-                  {date.toLocaleDateString('en-US', { weekday: 'short' })}
-                </p>
-                <p className="text-xs text-gray-600">{date.getDate()}</p>
+              <div style={{ height: `${SLOT_HEIGHT}px` }} className="border-b border-gray-200 px-2 py-1 bg-gray-50 sticky top-0 z-10 flex items-center">
+                <div>
+                  <p className="text-xs font-semibold text-gray-900">
+                    {date.toLocaleDateString('en-US', { weekday: 'short' })}
+                  </p>
+                  <p className="text-xs text-gray-600">{date.getDate()}</p>
+                </div>
               </div>
 
               {/* Time slots */}
               <div className="relative bg-white">
-                {hours.map((hour) => (
+                {timeSlots.map((slot) => (
                   <div
-                    key={hour}
-                    onClick={() => onTimeSlotClick(visibleStaff[0]?.staff_id || 0, new Date(date.setHours(hour, 0, 0, 0)))}
-                    className="h-12 border-b border-gray-100 hover:bg-blue-50 cursor-pointer transition-colors"
+                    key={slot.slot}
+                    onClick={() => {
+                      const clickTime = new Date(date)
+                      clickTime.setHours(slot.hour, slot.minutes, 0, 0)
+                      onTimeSlotClick(visibleStaff[0]?.staff_id || 0, clickTime)
+                    }}
+                    style={{ height: `${SLOT_HEIGHT}px` }}
+                    className="border-b border-gray-100 hover:bg-blue-50 cursor-pointer transition-colors"
                   />
                 ))}
 
@@ -195,17 +236,19 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
                   {appointments
                     .filter((appt) => new Date(appt.appointment_datetime).toDateString() === date.toDateString())
                     .map((appointment) => {
-                      const { topPercent, heightPercent } = getAppointmentPosition(appointment)
-                      const totalHeight = hours.length * 48
+                      const { topPixels, heightPixels } = getAppointmentPosition(appointment)
 
                       return (
                         <div
                           key={appointment.appointment_id}
-                          onClick={(event) => onAppointmentClick(appointment, event)} 
-                          className={`absolute left-1 right-1 rounded-md p-1 cursor-pointer hover:shadow-lg transition-shadow border-l-4 ${getStatusColor(appointment.status)}`}
+                          onClick={(event) => {
+                            event.stopPropagation()
+                            onAppointmentClick(appointment, event)
+                          }}
+                          className={`absolute left-1 right-1 rounded-md p-1 cursor-pointer hover:shadow-lg transition-shadow border-l-4 pointer-events-auto ${getStatusColor(appointment.status)}`}
                           style={{
-                            top: `${(topPercent / 100) * totalHeight}px`,
-                            height: `${(heightPercent / 100) * totalHeight}px`,
+                            top: `${topPixels}px`,
+                            height: `${heightPixels}px`,
                             minHeight: '20px'
                           }}
                         >
