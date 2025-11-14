@@ -14,6 +14,7 @@ const PersonaManagement: React.FC = () => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
+  console.log(persona);
   // Create Staff Modal State
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [newStaffName, setNewStaffName] = useState('')
@@ -21,7 +22,7 @@ const PersonaManagement: React.FC = () => {
   const [newPersonName, setNewPersonName] = useState('')
   const [showNewStaffPassword, setShowNewStaffPassword] = useState(false)
   const [createLoading, setCreateLoading] = useState(false)
-
+  
   // Update Staff Password Modal State
   const [showUpdateStaffModal, setShowUpdateStaffModal] = useState(false)
   const [selectedStaff, setSelectedStaff] = useState('')
